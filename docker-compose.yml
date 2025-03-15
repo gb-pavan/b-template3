@@ -1,0 +1,48 @@
+# version: '3.8'
+# services:
+#   mongodb:
+#     image: mongo
+#     container_name: nest_mongodb
+#     restart: always
+#     ports:
+#       - "27017:27017"
+#     environment:
+#       MONGO_INITDB_ROOT_USERNAME: admin
+#       MONGO_INITDB_ROOT_PASSWORD: secret
+#     volumes:
+#       - mongo_data:/data/db
+
+# volumes:
+#   mongo_data:
+
+# version: '3.8'
+# services:
+#   mongodb:
+#     image: mongo
+#     container_name: nest_mongodb
+#     restart: always
+#     ports:
+#       - "27017:27017"
+#     command: ["mongod", "--replSet", "rs0"]
+#     volumes:
+#       - mongo_data:/data/db
+
+# volumes:
+#   mongo_data:
+
+version: '3.8'
+services:
+  mongodb:
+    image: mongo
+    container_name: nest_mongodb
+    restart: always
+    ports:
+      - "27017:27017"
+    command: ["mongod", "--replSet", "rs0", "--bind_ip_all"]
+    volumes:
+      - mongo_data:/data/db
+
+volumes:
+  mongo_data:
+
+
