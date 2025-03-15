@@ -7,9 +7,21 @@ import { UpdateImageDto } from './dto/update-image.dto';
 export class ImageService {
   constructor(private prisma: PrismaService) {}
 
+  // async create(createImageDto: CreateImageDto) {
+  //   return this.prisma.image.create({ data: createImageDto });
+  // }
+
   async create(createImageDto: CreateImageDto) {
-    return this.prisma.image.create({ data: createImageDto });
+  try {
+    const image = await this.prisma.image.create({ data: createImageDto });
+    console.log("Image saved:", image);
+    return image;
+  } catch (error) {
+    console.error("Error inserting image:", error);
+    throw error;
   }
+}
+
 
   async findAll() {
     return this.prisma.image.findMany();

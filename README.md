@@ -45,6 +45,15 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
+## get db data
+
+```
+show dbs
+use myDatabase
+show collections
+db.myCollection.find()
+```
+
 ## Run tests
 
 ```bash
