@@ -1,16 +1,20 @@
-import { Controller, Post, Get, Param, Delete, UseInterceptors, UploadedFile } from '@nestjs/common';
+import { Controller, Post, Get, Param, Delete, UseInterceptors, UploadedFile, UseGuards } from '@nestjs/common';
 import { ApiConsumes, ApiTags, ApiBody } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ImageService } from './image.service';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
+import { TransformInterceptor } from 'src/common/interceptors/transform.interceptor';
+import { AuthGuard } from 'src/common/guards/auth.guard';
 
 @ApiTags('images')
 @Controller('images')
+@UseInterceptors(TransformInterceptor)
 export class ImageController {
   constructor(private readonly imageService: ImageService) {}
 
   @Post('upload')
+  @UseGuards(AuthGuard)
   @UseInterceptors(FileInterceptor('file', {
     storage: diskStorage({
       destination: './uploads',

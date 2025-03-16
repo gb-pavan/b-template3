@@ -13,9 +13,9 @@
 import { Module } from '@nestjs/common';
 import { ImageModule } from './modules/image/image.module';
 import { PrismaModule } from './modules/prisma/prisma.module';
-
+import { PhonePeModule } from './modules/phonepe/phonepe.module';
 @Module({
-  imports: [ImageModule,PrismaModule],
+  imports: [ImageModule,PrismaModule, PhonePeModule],
 })
 export class AppModule {}
 
