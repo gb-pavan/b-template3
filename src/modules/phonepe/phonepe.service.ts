@@ -20,24 +20,26 @@ export class PhonePeService {
   constructor(private readonly prisma: PrismaService) {}
 
   async initiatePayment(dto: InitiatePaymentDto) {
-    let userId = "MUID123";
+    console.log("dtoooo",dto);
     
-    const merchantTransactionId = uniqid();
+    const merchantTransactionId:string = uniqid();
     const payload = {
-      merchantId: this.PHONEPE_MERCHANT_ID,
+      "merchantId": process.env.PHONEPE_MERCHANT_ID,
       merchantTransactionId,
-      merchantUserId: userId,
-      amount: dto.amount * 100,
-      redirectUrl: `${this.APP_BE_URL}/phonepe/validate/${merchantTransactionId}`,
-      redirectMode: 'REDIRECT',
-      mobileNumber: '9999999999',
-      paymentInstrument: { type: 'PAY_PAGE' },
+      "merchantUserId": dto.userId,
+      "amount": dto.amount * 100,
+      // "redirectUrl": `${this.APP_BE_URL}/phonepe/validate/${merchantTransactionId}`,
+      "redirectUrl":`http://localhost:3000/${merchantTransactionId}`,
+      "redirectMode": "REDIRECT",
+      "callbackUrl":"https://webhook.site/callback-url",
+      "mobileNumber": "9999999999",
+      "paymentInstrument": { "type": "PAY_PAGE" },
     };
 
     const base64Payload = Buffer.from(JSON.stringify(payload), 'utf8').toString('base64');
-    console.log('Sending request to PhonePe:', payload);
+    console.log('Sending request to PhonePe:', base64Payload);
 
-    const checksum = sha256(base64Payload + '/pg/v1/pay' + this.SALT_KEY) + '###' + this.SALT_INDEX;
+    const checksum = sha256(base64Payload + '/pg/v1/pay' + process.env.SALT_KEY) + '###' + process.env.SALT_INDEX;
 
     // try {
     //   const response = await axios.post(
@@ -67,9 +69,9 @@ export class PhonePeService {
     { request: base64Payload },
     {
       headers: {
-        'Content-Type': 'application/json',
-        'X-VERIFY': checksum,
-        accept: 'application/json',
+        "Content-Type": "application/json",
+        "X-VERIFY": checksum,
+        accept: "application/json",
       },
       validateStatus: () => true, // Prevent Axios from throwing errors on non-2xx responses
     }
@@ -80,6 +82,8 @@ export class PhonePeService {
   if (!response || !response.data) {
     throw new Error('Invalid response from PhonePe API');
   }
+  console.log("response initiate",response)
+  console.log("response initiate data",response.data)
 
   return response.data;
 } catch (error) {
